@@ -1,11 +1,12 @@
 <#
 .SYNOPSIS
-  Builds MdViewer into a single self-contained-looking .exe.
+  Builds MdViewer into a single .exe (bin\Release\publish\MdViewer.exe).
 
 .DESCRIPTION
-  Publishes a framework-dependent single-file executable for win-x64.
-  The result needs the .NET 9 Desktop Runtime and the Edge WebView2 Runtime,
-  both of which are already present on an up-to-date Windows 11 machine.
+  Publishes a framework-dependent single-file executable for win-x64, about 2 MB.
+  The result needs the .NET 9 Desktop Runtime, which Windows does not ship, and the
+  Edge WebView2 Runtime, which Windows 11 does. For a build that needs no .NET on
+  the target machine, use installeruild-installer.ps1.
 #>
 param(
   [string]$Configuration = "Release"

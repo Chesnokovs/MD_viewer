@@ -3,8 +3,9 @@
   Builds MdViewer.msi — a per-user installer that needs no administrator rights.
 
 .DESCRIPTION
-  Publishes a self-contained single-file build (so the target machine needs no
-  .NET runtime installed), then packages it with the WiX Toolset.
+  Publishes a self-contained ReadyToRun build into a folder (the .NET runtime is
+  bundled, so the target machine needs none installed), then packages that folder
+  with the WiX Toolset into dist\MdViewer-<version>.msi.
 
   One-time setup:
     dotnet tool install --global wix --version 5.*

@@ -1,7 +1,7 @@
 # MdViewer
 
-A small, fast Markdown viewer for Windows. One `.exe`, no installer, no runtime
-folder to keep next to it.
+A small, fast Markdown viewer for Windows. Install it per user with the MSI, with no
+administrator rights needed, or build a single 2 MB `.exe` that runs from anywhere.
 
 ![MdViewer, light theme](docs/screenshot-light.png)
 
@@ -12,7 +12,8 @@ folder to keep next to it.
 - **Clean typography** — GitHub-style rendering with tables, task lists, footnotes and images
 - **Light and dark theme** — follows Windows by default; `Ctrl+D` cycles light, dark and
   back to following Windows, remembered between runs
-- **Syntax highlighting** — about 35 common languages in fenced code blocks
+- **Syntax highlighting** — about 35 common languages in fenced code blocks, from Bash
+  and C# to SQL and YAML
 - **Table of contents** — sidebar built from the document's headings, follows your scrolling
 - **Find in document** — `Ctrl+F`, with match counter and next/previous
 - **Live reload** — edit the file in any editor and the view updates by itself, keeping your place
@@ -37,18 +38,22 @@ folder to keep next to it.
 
 ## Install
 
-Requires Windows 10/11 with the Microsoft Edge WebView2 Runtime, which is part of
-Windows 11 and of any recent Edge install. If it is missing, MdViewer says so and points
-at the [download page](https://developer.microsoft.com/microsoft-edge/webview2/).
+Both ways need Windows 10 or 11 with the Microsoft Edge WebView2 Runtime, which is part
+of Windows 11 and of any recent Edge install. If it is missing, MdViewer says so and
+points at the [download page](https://developer.microsoft.com/microsoft-edge/webview2/).
 
 **With the installer.** Download `MdViewer-<version>.msi` from the
 [releases page](https://github.com/Chesnokovs/MD_viewer/releases) and double-click it.
 It installs for the current user only — no administrator rights, no UAC prompt — into
 `%LOCALAPPDATA%\Programs\MdViewer`, adds a Start menu entry, and makes `.md` files open
-in MdViewer. Uninstall from Settings › Apps like any other program.
+in MdViewer. The .NET runtime comes inside the installer, so nothing else is needed.
+Uninstall from Settings › Apps like any other program.
 
-**Without the installer.** Copy `MdViewer.exe` anywhere and, to get the file
-association, run:
+**Without the installer.** [Build](#build-from-source) `MdViewer.exe`, or take it from the
+`MdViewer` artifact of the latest [CI run](https://github.com/Chesnokovs/MD_viewer/actions),
+and copy it anywhere. This single file does not carry the .NET runtime, so the machine
+also needs the [.NET 9 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0).
+To get the file association, run:
 
 ```powershell
 .\scripts\install-file-association.ps1 -Exe "C:\Tools\MdViewer\MdViewer.exe"
@@ -58,7 +63,9 @@ The script only writes to `HKEY_CURRENT_USER`, so it needs no administrator righ
 `scripts\uninstall-file-association.ps1` removes it again.
 
 Settings (theme, window size, sidebar state) are stored in
-`%LOCALAPPDATA%\MdViewer\settings.json`.
+`%LOCALAPPDATA%\MdViewer\settings.json`, and the browser engine keeps its profile in
+`%LOCALAPPDATA%\MdViewerrowser`. Uninstalling leaves that folder behind; delete it by
+hand to remove every trace.
 
 ## One window per session
 
@@ -71,7 +78,7 @@ So MdViewer keeps a single process per logon session: opening another `.md` file
 the path to the window that is already running, which comes to the front and swaps the
 document. Measured on a fresh browser profile:
 
-| | Before | Now |
+| | A process per file | One window |
 |---|---|---|
 | First document | 3.3–4.0 s | 0.9 s |
 | Every document after that | 3.3–4.0 s | 0.1–0.25 s |
@@ -91,7 +98,8 @@ Needs the .NET 9 SDK (a newer SDK builds it too).
 ```
 
 The result is a single file: `bin\Release\publish\MdViewer.exe`, about 2 MB. It needs the
-.NET 9 Desktop Runtime on the machine, which an up-to-date Windows 11 has.
+.NET 9 Desktop Runtime on the machine; Windows does not ship it, so install it once from
+the link above.
 
 Run the unit tests (they cover the link and file rules in `LinkPolicy.cs` and the
 encoding detection) with:
@@ -100,8 +108,11 @@ encoding detection) with:
 .\test.ps1
 ```
 
-Both scripts send intermediate files to `%TEMP%\MdViewer-build`, because a project folder
-on a synced drive gets its files locked by the sync client mid-build.
+All build scripts send intermediate files to `%TEMP%\MdViewer-build`, because a project
+folder on a synced drive gets its files locked by the sync client mid-build.
+
+To inspect the page while developing, start MdViewer with the environment variable
+`MDVIEWER_DEV=1`; that enables the browser's developer tools (`F12`).
 
 ## Build the installer
 
@@ -148,7 +159,8 @@ untrusted input:
 
 - The page runs under a Content Security Policy with no `unsafe-inline`, so an inline
   handler smuggled in as an `onerror` attribute cannot execute. Scripts load only from
-  the executable's own assets, and the page cannot reach the network apart from images.
+  the executable's own assets, and the page cannot reach the network apart from images
+  and audio or video.
 - Nothing leaves the viewer without a click. A `<meta http-equiv="refresh">` written into
   the document is removed, and a navigation the document starts by itself is refused.
 - Links only leave the app for `http`, `https` and `mailto`. A `javascript:`,
