@@ -49,9 +49,8 @@ It installs for the current user only — no administrator rights, no UAC prompt
 in MdViewer. The .NET runtime comes inside the installer, so nothing else is needed.
 Uninstall from Settings › Apps like any other program.
 
-**Without the installer.** [Build](#build-from-source) `MdViewer.exe`, or take it from the
-`MdViewer` artifact of the latest [CI run](https://github.com/Chesnokovs/MD_viewer/actions),
-and copy it anywhere. This single file does not carry the .NET runtime, so the machine
+**Without the installer.** [Build](#build-from-source) `MdViewer.exe` yourself and copy
+it anywhere. This single file does not carry the .NET runtime, so the machine
 also needs the [.NET 9 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0).
 To get the file association, run:
 
