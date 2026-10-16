@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--
+  data-theme is rewritten by the host as this file is served, so the very first
+  paint already uses the saved theme. The Content-Security-Policy that keeps a
+  document's own HTML from running scripts is set on the same response; see
+  MainForm.ContentSecurityPolicy.
+-->
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MdViewer</title>
+<link rel="stylesheet" href="hljs.css">
+<link rel="stylesheet" href="viewer.css">
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar" aria-label="Table of contents">
+    <div class="sidebar-title">Contents</div>
+    <nav id="toc"></nav>
+  </aside>
+
+  <div id="main">
+    <header id="bar">
+      <button id="btn-toc" class="icon-btn" title="Contents (Ctrl+B)" aria-label="Contents">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      </button>
+      <div id="doc-name">No document</div>
+      <div class="spacer"></div>
+      <button id="btn-find" class="icon-btn" title="Find (Ctrl+F)" aria-label="Find">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
+      <button id="btn-open" class="icon-btn" title="Open file (Ctrl+O)" aria-label="Open file">
+        <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      </button>
+      <button id="btn-theme" class="icon-btn" title="Theme: follows Windows (Ctrl+D)" aria-label="Switch theme">
+        <svg class="ico-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.9 1.9M17.2 17.2l1.9 1.9M19.1 4.9l-1.9 1.9M6.8 17.2l-1.9 1.9"/></svg>
+        <svg class="ico-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4 8.4 8.4 0 1 0 20 14.2z"/></svg>
+        <svg class="ico-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17A8.5 8.5 0 0 0 12 3.5z" fill="currentColor" stroke="none"/></svg>
+      </button>
+    </header>
+
+    <div id="findbar" hidden>
+      <svg class="find-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="find-input" type="text" placeholder="Find in document" spellcheck="false" autocomplete="off">
+      <span id="find-count">0/0</span>
+      <button id="find-prev" class="icon-btn small" title="Previous (Shift+Enter)" aria-label="Previous match">
+        <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+      </button>
+      <button id="find-next" class="icon-btn small" title="Next (Enter)" aria-label="Next match">
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <button id="find-close" class="icon-btn small" title="Close (Esc)" aria-label="Close find">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div id="scroller" tabindex="-1">
+      <article id="doc" class="markdown"></article>
+      <div id="empty">
+        <svg viewBox="0 0 24 24" class="empty-ico"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg>
+        <div class="empty-title">Drop a Markdown file here</div>
+        <div class="empty-hint">or press <kbd>Ctrl</kbd>+<kbd>O</kbd> to open one</div>
+        <div id="empty-version"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="highlight.min.js"></script>
+<script src="viewer.js"></script>
+</body>
+</html>

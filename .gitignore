@@ -1,0 +1,11 @@
+# Build output
+bin/
+obj/
+dist/
+*.wixpdb
+
+# IDE and user files
+.vs/
+.idea/
+*.user
+*.suo

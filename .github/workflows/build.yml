@@ -1,0 +1,23 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Test
+        run: dotnet test MdViewer.sln -c Release --nologo
+      - name: Publish single-file exe
+        run: dotnet publish MdViewer.csproj -c Release -o publish --nologo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MdViewer
+          path: publish/MdViewer.exe
